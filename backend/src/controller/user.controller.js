@@ -63,7 +63,10 @@ const registerUser = asyncHandler(async(req,res)=>{
     }
 
     const user = await User.create({
-        email,password,username:username.toLowerCase(),name
+        email,
+        password,
+        username:username.toLowerCase(),
+        name
     })
 
     const createdUser = await User.findById(user._id).select(
@@ -79,7 +82,85 @@ const registerUser = asyncHandler(async(req,res)=>{
 
     })
 
+const logout = asyncHandler(async(req,res)=>{
+    await User.findByIdAndUpdate(
+        req.user._id,
+        {
+           $set:{
+              refreshToken: undefined
+           }
+           },
+           {
+              new: true
+           }
+        
+      )
+      
+  
+     return res.status(200).
+     clearCookie("accessToken",options).
+     clearCookie("refreshToken",options).
+     json(new ApiResponse(200,{},"User Logged out"))
+})
+
+const CurrentUser = asyncHandler(async(req,res)=>{
+    return res.status(200).json(new ApiResponse(200,req.user,"CurrentUser Fetch successfully"))
+})
+
+const changePassword = asyncHandler(async(req,res)=>{
+    const {oldPassword,newPassword} = req.body
+
+    if(!oldPassword || !newPassword){
+        throw new ApiError(401,"Old and New Password is required")
+    }
+
+    const isPasswordcorrect = await user.isPasswordCorrect(oldPassword)
+
+    if(!isPasswordcorrect){
+        throw ApiError(401,"Old password is not correct")
+    }
+
+     const user = await User.findById(req.user._id)
+    
+
+    user.password =  newPassword
+      await user.save({validateBeforeSave:false})
+
+
+    
+    return res.status(200).json(new ApiError(200,{},"Password Updated Successfully"))
+
+    
+})
+
+const updateAccountDetails = asyncHandler(async(req,res)=>{
+
+    const {name,email} = req.body
+    
+          if(!name || !email){
+             throw new ApiError(401,"name and email is required")
+          }
+    
+        const user = await User.findByIdAndUpdate(
+          req.user?._id,
+          {
+             $set:{
+                name: name ,
+                 email : email
+             }
+          },
+          {new:true}
+         ).select("-password  ")
+    
+         return res.status(200).json(new ApiResponse(200,user,"Account Details Updated"))
+  })
+
+
 export {
     loginUser,
-    registerUser
+    registerUser,
+    logout,
+    CurrentUser,
+    changePassword,
+    updateAccountDetails
 }

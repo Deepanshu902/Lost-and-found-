@@ -1,7 +1,7 @@
 import {asyncHandler} from "../utils/asyncHandler.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import { ApiError } from "../utils/ApiError.js"
-import jwt from "jsonwebtoken"
+
 import {User} from "../models/user.models.js"
 import {generateAccessAndRefreshTokens} from "../utils/generateAccessAndRefreshTokens.js"
 
@@ -48,7 +48,7 @@ const loginUser = asyncHandler(async(req,res)=>{
     })
 
 const registerUser = asyncHandler(async(req,res)=>{
-    const {email,password,username,name} = req.body
+    const {email,password,username,name,number} = req.body
 
     if(!email || !password || !username ||!name){
         throw new ApiError(401,"All the feilds are required")
@@ -66,7 +66,8 @@ const registerUser = asyncHandler(async(req,res)=>{
         email,
         password,
         username:username.toLowerCase(),
-        name
+        name,
+        number
     })
 
     const createdUser = await User.findById(user._id).select(
@@ -135,7 +136,7 @@ const changePassword = asyncHandler(async(req,res)=>{
 
 const updateAccountDetails = asyncHandler(async(req,res)=>{
 
-    const {name,email} = req.body
+    const {name,email,number} = req.body
     
           if(!name || !email){
              throw new ApiError(401,"name and email is required")
@@ -146,7 +147,8 @@ const updateAccountDetails = asyncHandler(async(req,res)=>{
           {
              $set:{
                 name: name ,
-                 email : email
+                 email : email,
+                 number:number
              }
           },
           {new:true}

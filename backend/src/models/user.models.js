@@ -29,6 +29,11 @@ const userSchema = mongoose.Schema({
             trim:true
             
         },
+        number:{
+            type:String,
+            required:true,
+            trim:true
+        },
         refreshToken:{
             type:String
         }

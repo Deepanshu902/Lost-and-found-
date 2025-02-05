@@ -3,7 +3,25 @@ import {ApiResponse} from "../utils/ApiResponse.js"
 import { ApiError } from "../utils/ApiError.js"
 
 import {User} from "../models/user.models.js"
-import {generateAccessAndRefreshTokens} from "../utils/generateAccessAndRefreshTokens.js"
+
+
+const  generateAccessAndRefreshTokens = async(userId)=>{
+    try{
+       const user = await User.findOne(userId)
+     const accessToken =  user.generateAccessToken()
+      const refreshToken=  user.generateRefreshToken()
+ 
+       user.refreshToken = refreshToken // save value to db 
+       await  user.save({ validateBeforeSave : false })  // save the updated user
+       // dont do any validation just save the user
+ 
+       return {refreshToken,accessToken}
+ 
+    }
+    catch(error){
+       throw new ApiError(501,"Something went wrong while generating refresh and access token ")
+    }
+ }
 
 
 
@@ -41,10 +59,17 @@ const loginUser = asyncHandler(async(req,res)=>{
         "-password -refreshToken"
      )
 
-     return res.status(200).
-     json(new ApiResponse(200,loggedInUser,"User Logged in successfully")).
-     cookie("refreshToken",refreshToken,options).
-     cookie("accessToken",accessToken,options)
+     return res.status(200)
+      .cookie("accessToken",accessToken,options)
+      .cookie("refreshToken",refreshToken,options)
+      .json(
+         new ApiResponse(200,
+            {
+            user:loggedInUser,accessToken,refreshToken  // good practise to send them seperately also after sending cookie
+         },
+         "User Logged In Successfully"
+      )
+      )
     })
 
 const registerUser = asyncHandler(async(req,res)=>{
@@ -115,16 +140,18 @@ const changePassword = asyncHandler(async(req,res)=>{
         throw new ApiError(401,"Old and New Password is required")
     }
 
+    const user = await User.findById(req.user);
+    if (!user) {
+        return next(new ApiError(404, "User not found"));
+    }
+
     const isPasswordcorrect = await user.isPasswordCorrect(oldPassword)
 
     if(!isPasswordcorrect){
         throw ApiError(401,"Old password is not correct")
     }
 
-     const user = await User.findById(req.user._id)
-    
-
-    user.password =  newPassword
+    user.password = newPassword
       await user.save({validateBeforeSave:false})
 
 

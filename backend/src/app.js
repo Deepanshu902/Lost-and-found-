@@ -27,6 +27,6 @@ app.use(cookieParser())
 // Routes
 
 app.use("/api/v1/users", userRouter)
-app.use("/api/v1/users", tweetRouter)
+app.use("/api/v1/tweet", tweetRouter)
 
 export {app}

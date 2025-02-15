@@ -27,7 +27,7 @@ const createTweet = asyncHandler(async (req, res) => {
 
         }
 
-        return res.status(200).json(200,tweet,"Tweet created successfully")
+        return res.status(200).json(new ApiResponse(200,tweet,"Tweet created successfully"))
 
 })
 
@@ -47,10 +47,10 @@ const getUserTweets = asyncHandler(async (req, res) => {
 
     const tweets = await Tweet.find({owner:userId})
 
-    return res.status(200).json(
+    return res.status(200).json(new ApiResponse(
         200,
         tweets,
-        "Successfully Fetched Tweets"
+        "Successfully Fetched Tweets")
     )
 
 

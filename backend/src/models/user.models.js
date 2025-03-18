@@ -32,7 +32,13 @@ const userSchema = mongoose.Schema({
         number:{
             type:String,
             required:true,
-            trim:true
+            trim:true,
+            validate: {
+                validator: function (v) {
+                    return /^[0-9]{10}$/.test(v); // Example: Validates 10-digit numbers
+                },
+                message: (props) => `${props.value} is not a valid phone number!`,
+            },
         },
         refreshToken:{
             type:String

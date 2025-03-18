@@ -7,7 +7,7 @@ import {User} from "../models/user.models.js"
 
 const  generateAccessAndRefreshTokens = async(userId)=>{
     try{
-       const user = await User.findOne(userId)
+       const user = await User.findById(userId)
      const accessToken =  user.generateAccessToken()
       const refreshToken=  user.generateRefreshToken()
  
@@ -140,15 +140,15 @@ const changePassword = asyncHandler(async(req,res)=>{
         throw new ApiError(401,"Old and New Password is required")
     }
 
-    const user = await User.findById(req.user);
+    const user = await User.findById(req.user._id);
     if (!user) {
-        return next(new ApiError(404, "User not found"));
+        throw new ApiError(500,"Error while changing password")
     }
 
     const isPasswordcorrect = await user.isPasswordCorrect(oldPassword)
 
     if(!isPasswordcorrect){
-        throw ApiError(401,"Old password is not correct")
+        throw new ApiError(401,"Old password is not correct")
     }
 
     user.password = newPassword
@@ -156,7 +156,7 @@ const changePassword = asyncHandler(async(req,res)=>{
 
 
     
-    return res.status(200).json(new ApiError(200,{},"Password Updated Successfully"))
+    return res.status(200).json(new ApiResponse(200,{},"Password Updated Successfully"))
 
     
 })

@@ -4,9 +4,12 @@ import { changePassword, CurrentUser, loginUser,logout,registerUser, updateAccou
 
 import {verifyJWT} from "../middleware/auth.middleware.js"
 
+import { upload } from "../middleware/multer.middleware.js"
 
 
 const router = Router()
+
+router.use(upload.none());
 
 router.route("/login").post(loginUser)
 

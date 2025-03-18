@@ -1,37 +1,46 @@
 import {asyncHandler} from "../utils/asyncHandler.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import { ApiError } from "../utils/ApiError.js"
-import {Tweet} from "../models/tweet.models.js"
+import {Report} from "../models/report.models.js"
 import {User} from "../models/user.models.js"
 import mongoose,{ isValidObjectId } from "mongoose"
 
 
 
-const createTweet = asyncHandler(async (req, res) => {
-    
-    const {content} = req.body
-    if(!content){
-        throw new ApiError(401,"Write Tweet");
-        
+const createReport = asyncHandler(async (req, res) => {
+    const { title, content, location,status } = req.body;
+
+    if (!title || !content || !location || !status) {
+        throw new ApiError(400, "Title, content, status, and location are required");
     }
 
-  const tweet =   await Tweet.create(
-        {
-            content: content,
-            owner : req.user?._id
+    
+    const user = await User.findById(req.user?._id).select("number");
 
-        })
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
 
-        if(!tweet){
-            throw new ApiError(500,"Error while creating tweet")
+    const report = await Report.create({
+        title,
+        content,
+        location,
+        owner: req.user?._id,
+        number:user.number,
+        status
+    });
 
-        }
+    if (!report) {
+        throw new ApiError(500, "Error while creating report");
+    }
 
-        return res.status(200).json(new ApiResponse(200,tweet,"Tweet created successfully"))
+    return res
+        .status(201)
+        .json(new ApiResponse(201, report, "Report created successfully"));
+});
 
-})
 
-const getUserTweets = asyncHandler(async (req, res) => {
+const getUserReports = asyncHandler(async (req, res) => {
    
     const {userId} = req.params
     
@@ -45,80 +54,81 @@ const getUserTweets = asyncHandler(async (req, res) => {
         throw new ApiError(401,"No user found")
     }
 
-    const tweets = await Tweet.find({owner:userId})
+    const reports = await Report.find({owner:userId})
 
     return res.status(200).json(new ApiResponse(
         200,
-        tweets,
-        "Successfully Fetched Tweets")
+        reports,
+        "Successfully Fetched Reports")
     )
 
 
 
 })
 
-const updateTweet = asyncHandler(async (req, res) => {
+const updateReport = asyncHandler(async (req, res) => {
     
-    const {content} = req.body
-    const {tweetId}  = req.params
+    const {content,status} = req.body
+    const {reportId}  = req.params
 
-    if(!isValidObjectId(tweetId)){
+    if(!isValidObjectId(reportId)){
         throw new ApiError(401,"Not valid userId")
     }
-    if(!content){
+    if(!content && !status){
         throw new ApiError(401,"Enter content")
 
     }
-        const tweet = await Tweet.findAndUpdate(
+        const report = await Report.findOneAndUpdate(
             {
-                _id:tweetId,
+                _id:reportId,
                 owner: req.user?._id
             },
             {   
                 $set:{
-                content : content
+                content : content,
+                status : status
             }
             },
             {
                 new:true
             }
         )
-        if(!tweet){
-            throw new ApiError(401,"No tweet found ")
+        if(!report){
+            throw new ApiError(401,"No report found ")
         }   
 
         return res
         .status(200)
-        .json(new ApiResponse(201, tweet, "Successfully updated the tweet"));
+        .json(new ApiResponse(201, report, "Successfully updated the report"));
     
 
 })
 
-const deleteTweet = asyncHandler(async (req, res) => {
+const deleteReport = asyncHandler(async (req, res) => {
     
-    const {tweetId} = req.params
+    const {reportId} = req.params
 
-    if(!isValidObjectId(tweetId)){
-        throw new ApiError(401,"Not valid tweetId")
+    if(!isValidObjectId(reportId)){
+        throw new ApiError(401,"Not valid reportId")
     }
-    const deleteTweet = await Tweet.findOneAndDelete(
+    const deleteReport = await Report.findOneAndDelete(
         {
-            _id: tweetId,
+            _id: reportId,
             owner: req.user?._id,
         }
     )
 
-    if(!deleteTweet){
-        throw new ApiError(500,"No tweet or you are not owner of tweet")
+    if(!deleteReport){
+        throw new ApiError(500,"No report or you are not owner of report")
     }
 
-    return res.status(200).json(new ApiResponse(200,{},"Successfully deleted the tweet"))
+    return res.status(200).json(new ApiResponse(200,{},"Successfully deleted the report"))
 
 })
 
 export {
-    createTweet,
-    getUserTweets,
-    updateTweet,
-    deleteTweet
+    createReport,
+    getUserReports,
+    updateReport,
+    deleteReport
 }

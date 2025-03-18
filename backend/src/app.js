@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser"
 
 import userRouter from "../src/routers/user.routes.js"
 
-import tweetRouter from "../src/routers/tweet.routes.js"
+import reportRouter from "../src/routers/report.routes.js"
 
 
 const app = express()
@@ -27,6 +27,6 @@ app.use(cookieParser())
 // Routes
 
 app.use("/api/v1/users", userRouter)
-app.use("/api/v1/tweet", tweetRouter)
+app.use("/api/v1/report", reportRouter)
 
 export {app}

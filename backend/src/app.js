@@ -7,6 +7,8 @@ import cookieParser from "cookie-parser"
 import userRouter from "../src/routers/user.routes.js"
 
 import reportRouter from "../src/routers/report.routes.js"
+import dotenv from 'dotenv';
+dotenv.config();
 
 
 const app = express()

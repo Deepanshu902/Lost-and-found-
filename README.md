@@ -28,6 +28,17 @@ Designed for users to report lost or found items and reconnect with their belong
 
 ---
 
+## 📸 Screenshots
+
+![Landing Page ](/screenshots/Landing.png)
+![Login Page](/screenshots/Login.png)
+![Signup Page](/screenshots/Signup.png)
+![Dashboard View](/screenshots/Dashboard.png)
+![Report Item Form](/screenshots/reportform.png)
+
+
+---
+
 ## 🧱 Tech Stack
 
 | Layer         | Tech                                |

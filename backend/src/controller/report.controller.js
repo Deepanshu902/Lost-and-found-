@@ -43,7 +43,6 @@ const createReport = asyncHandler(async (req, res) => {
      // ✅ Send email to all users (except the one who reported)
     try {
       const users = await User.find({}).select("username email");
-      console.log(users)
       const allEmails = users
          .map((u) => u.email)
         .filter((email) => email && typeof email === "string" && email.includes("@") && email !== user.email
@@ -60,7 +59,7 @@ const createReport = asyncHandler(async (req, res) => {
                     <li><strong>Title:</strong> ${title}</li>
                     <li><strong>Location:</strong> ${location}</li>
                 </ul>
-                <p><a href="http://localhost:3000/dashboard">View it on the dashboard</a></p>
+                <p><a href="https://lost-and-found-murex-five.vercel.app/">View it on the dashboard</a></p>
             `
         });
     } catch (emailError) {

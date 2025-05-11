@@ -41,5 +41,9 @@ app.use(limiter)
 
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/report", reportRouter)
+app.get("/healthz", (req, res) => {
+    res.status(200).json({ status: "OK" });
+  });
+
 
 export {app}

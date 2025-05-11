@@ -110,7 +110,7 @@ export function ReportFormModal({ isOpen, onClose, onReportAdded, user }: Report
   
     setIsSubmitting(true)
     try {
-      const response = await fetch("http://localhost:8000/api/v1/report/", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}report/`, {
         method: "POST",
         body: formData,
         credentials: "include",

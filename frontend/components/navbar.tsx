@@ -35,7 +35,7 @@ export function Navbar({ user }: NavbarProps) {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/v1/users/logout", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}users/logout`, {
         method: "POST",
         credentials: "include",
       })

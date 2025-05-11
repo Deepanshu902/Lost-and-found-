@@ -53,7 +53,7 @@ export default function DashboardPage() {
 
   const fetchReports = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/v1/report/", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}report/`, {
         credentials: "include",
       })
 

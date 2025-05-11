@@ -95,7 +95,7 @@ export default function ProfilePage() {
   async function onUpdateProfile(data: ProfileFormValues) {
     setIsUpdating(true)
     try {
-      const response = await fetch("http://localhost:8000/api/v1/users/update-details", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}users/update-details`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -135,7 +135,7 @@ export default function ProfilePage() {
   async function onChangePassword(data: PasswordFormValues) {
     setIsChangingPassword(true)
     try {
-      const response = await fetch("http://localhost:8000/api/v1/users/change-password", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}users/change-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

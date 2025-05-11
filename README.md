@@ -29,21 +29,21 @@ Designed for users to report lost or found items and reconnect with their belong
 ---
 
 ## 📸 Screenshots
-<h3>Landing Page</h3>
-![Landing Page ](/screenshots/Landing.png)
 
-<h3>Login Page</h3>
+### Landing Page
+![Landing Page](/screenshots/Landing.png)
+
+### Login Page
 ![Login Page](/screenshots/Login.png)
 
-<h3>Signup Page</h3>
+### Signup Page
 ![Signup Page](/screenshots/Signup.png)
 
-<h3>Dashboard Page</h3>
+### Dashboard Page
 ![Dashboard View](/screenshots/Dashboard.png)
 
-<h3>Report Item Form</h3>
+### Report Item Form
 ![Report Item Form](/screenshots/reportform.png)
-
 
 ---
 

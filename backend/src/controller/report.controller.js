@@ -5,7 +5,7 @@ import {Report} from "../models/report.models.js"
 import {User} from "../models/user.models.js"
 import mongoose,{ isValidObjectId } from "mongoose"
 import { uploadOnCloudinary,deleteCloudinaryFile } from "../utils/cloudinary.js"
-
+import { sendEmail } from "../utils/mailer.js"
 
 
 const createReport = asyncHandler(async (req, res) => {
@@ -15,7 +15,7 @@ const createReport = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Title, content, status, and location are required");
     }
 
-    const user = await User.findById(req.user?._id).select("number");
+    const user = await User.findById(req.user?._id).select("username number");
     if (!user) {
         throw new ApiError(404, "User not found");
     }
@@ -40,10 +40,36 @@ const createReport = asyncHandler(async (req, res) => {
     if (!report) {
         throw new ApiError(500, "Error while creating report");
     }
+     // ✅ Send email to all users (except the one who reported)
+    try {
+      const users = await User.find({}).select("username email");
+      console.log(users)
+      const allEmails = users
+         .map((u) => u.email)
+        .filter((email) => email && typeof email === "string" && email.includes("@") && email !== user.email
+        );
 
+
+        await sendEmail({
+            to: allEmails,
+            subject: `📢 New ${status} Item Reported`,
+            html: `
+                <h3>New Report on Lost No More</h3>
+                <p><strong>${user.username}</strong> has reported a <strong>${status}</strong> item:</p>
+                <ul>
+                    <li><strong>Title:</strong> ${title}</li>
+                    <li><strong>Location:</strong> ${location}</li>
+                </ul>
+                <p><a href="http://localhost:3000/dashboard">View it on the dashboard</a></p>
+            `
+        });
+    } catch (emailError) {
+        console.error("Failed to send report notification email:", emailError);
+    }
+    
     return res
         .status(201)
-        .json(new ApiResponse(201, report, "Report created successfully"));
+        .json(new ApiResponse(201, report, "Report created successfully"));    
 });
 
 const getUserReports = asyncHandler(async (req, res) => {

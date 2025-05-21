@@ -1,6 +1,6 @@
 # 🧭 Lost No More
 
-A community-powered lost and found platform built with **Next.js**, **Express.js**, **MongoDB**, and **Node.js**.  
+A community-powered lost and found platform built with **React**, **Express.js**, **MongoDB**, and **Node.js**.  
 Designed for users to report lost or found items and reconnect with their belongings.
 
 ---

@@ -1,8 +1,10 @@
 # 🧭 Lost No More
 
-A community-powered lost and found platform built with **React**, **Express.js**, **MongoDB**, and **Node.js**.  
+A community-powered lost and found platform built with **Next.js**, **Express.js**, **MongoDB**, and **Node.js**.  
 Designed for users to report lost or found items and reconnect with their belongings.
 
+**Live Website:** [Lost No More](https://lost-and-found-murex-five.vercel.app/)
+Backend is Hosted on AWS EC2 
 ---
 
 ## 🚀 Features
@@ -21,7 +23,7 @@ Designed for users to report lost or found items and reconnect with their belong
   - Filter by type and see reporter details
 
 - 🛎️ **Notifications**
-  - Users are alerted when a new item is reported
+  - Users are alerted when a new item is reported through Email
 
 - 🖼️ **Image Upload**
   - Uses **Multer** and **Cloudinary** for seamless image uploads
@@ -56,5 +58,10 @@ Designed for users to report lost or found items and reconnect with their belong
 | Database     | MongoDB + Mongoose                   |
 | Image Upload | Multer + Cloudinary                  |
 | Auth         | JWT + Cookie Tokens                  |
+| Security     | Rate Limiter                         |
+| DevOps       | Docker                               |
 
 ---
+
+Made by Deepanshu and Team  
+For Chitkara University  

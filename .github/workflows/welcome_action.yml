@@ -9,6 +9,9 @@ on:
 jobs:
   welcome-new-contributor:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
     steps:
       - name: 'Greet the contributor'
         uses: garg3133/welcome-new-contributors@v1.2
